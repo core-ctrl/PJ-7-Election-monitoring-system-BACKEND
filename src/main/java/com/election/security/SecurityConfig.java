@@ -39,10 +39,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "https://pj-7-election-monitoring-system-frontend.vercel.app",
-                "https://*.vercel.app"));
+        config.setAllowedOriginPatterns(List.of("*")); // ← Allow ALL origins
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
