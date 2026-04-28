@@ -7,7 +7,6 @@ import com.election.security.JwtUtil;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +34,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.password()));
-        String token = jwtUtil.generateToken(req.email());
-        return ResponseEntity.ok(new TokenResponse(token));
+        try {
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            req.email(), req.password()));
+            String token = jwtUtil.generateToken(req.email());
+            return ResponseEntity.ok(new TokenResponse(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid credentials: " + e.getMessage());
+        }
     }
 
     public record RegisterRequest(String name, String email, String password) {
